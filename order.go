@@ -19,7 +19,7 @@ type CreateOrderModel struct {
 	Price       string `json:"price,omitempty"`
 	Size        string `json:"size,omitempty"`
 	TimeInForce string `json:"timeInForce,omitempty"`
-	CancelAfter int64 `json:"cancelAfter,omitempty"`
+	CancelAfter int64  `json:"cancelAfter,omitempty"`
 	PostOnly    bool   `json:"postOnly,omitempty"`
 	Hidden      bool   `json:"hidden,omitempty"`
 	IceBerg     bool   `json:"iceberg,omitempty"`
@@ -42,6 +42,12 @@ type CreateOrderResultModel struct {
 // CreateOrder places a new order.
 func (as *ApiService) CreateOrder(o *CreateOrderModel) (*ApiResponse, error) {
 	req := NewRequest(http.MethodPost, "/api/v1/orders", o)
+	return as.Call(req)
+}
+
+// CreateOrderHf places a new hf order.
+func (as *ApiService) CreateOrderHf(o *CreateOrderModel) (*ApiResponse, error) {
+	req := NewRequest(http.MethodPost, "/api/v1/hf/orders", o)
 	return as.Call(req)
 }
 
@@ -71,6 +77,14 @@ func (as *ApiService) CancelOrder(orderId string) (*ApiResponse, error) {
 	return as.Call(req)
 }
 
+// CancelOrderHf cancels a previously placed order.
+func (as *ApiService) CancelOrderHf(orderId, symbol string) (*ApiResponse, error) {
+	params := make(map[string]string)
+	params["symbol"] = symbol
+	req := NewRequest(http.MethodDelete, "/api/v1/hf/orders/"+orderId, params)
+	return as.Call(req)
+}
+
 // A CancelOrderByClientResultModel represents the result of CancelOrderByClient().
 type CancelOrderByClientResultModel struct {
 	CancelledOrderId string `json:"cancelledOrderId"`
@@ -80,6 +94,14 @@ type CancelOrderByClientResultModel struct {
 // CancelOrderByClient cancels a previously placed order by client ID.
 func (as *ApiService) CancelOrderByClient(clientOid string) (*ApiResponse, error) {
 	req := NewRequest(http.MethodDelete, "/api/v1/order/client-order/"+clientOid, nil)
+	return as.Call(req)
+}
+
+// CancelOrderHfByClient cancels a previously placed order by client ID.
+func (as *ApiService) CancelOrderHfByClient(clientOid, symbol string) (*ApiResponse, error) {
+	params := make(map[string]string)
+	params["symbol"] = symbol
+	req := NewRequest(http.MethodDelete, "/api/v1/hf/order/client-order/"+clientOid, params)
 	return as.Call(req)
 }
 
@@ -113,12 +135,13 @@ type OrderModel struct {
 	Hidden        bool   `json:"hidden"`
 	IceBerg       bool   `json:"iceberg"`
 	VisibleSize   string `json:"visibleSize"`
-	CancelAfter   int64 `json:"cancelAfter"`
+	CancelAfter   int64  `json:"cancelAfter"`
 	Channel       string `json:"channel"`
 	ClientOid     string `json:"clientOid"`
 	Remark        string `json:"remark"`
 	Tags          string `json:"tags"`
 	IsActive      bool   `json:"isActive"`
+	Active        bool   `json:"active"`
 	CancelExist   bool   `json:"cancelExist"`
 	CreatedAt     int64  `json:"createdAt"`
 	TradeType     string `json:"tradeType"`
@@ -131,6 +154,24 @@ type OrdersModel []*OrderModel
 func (as *ApiService) Orders(params map[string]string, pagination *PaginationParam) (*ApiResponse, error) {
 	pagination.ReadParam(params)
 	req := NewRequest(http.MethodGet, "/api/v1/orders", params)
+	return as.Call(req)
+}
+
+// OrdersHfActive returns a list your active hf orders.
+func (as *ApiService) OrdersHfActive(symbol string, pagination *PaginationParam) (*ApiResponse, error) {
+	params := make(map[string]string)
+	params["symbol"] = symbol
+	pagination.ReadParam(params)
+	req := NewRequest(http.MethodGet, "/api/v1/hf/orders/active", params)
+	return as.Call(req)
+}
+
+// OrdersHfDone returns a list your done hf orders.
+func (as *ApiService) OrdersHfDone(symbol string, pagination *PaginationParam) (*ApiResponse, error) {
+	params := make(map[string]string)
+	params["symbol"] = symbol
+	pagination.ReadParam(params)
+	req := NewRequest(http.MethodGet, "/api/v1/hf/orders/done", params)
 	return as.Call(req)
 }
 
@@ -161,9 +202,25 @@ func (as *ApiService) Order(orderId string) (*ApiResponse, error) {
 	return as.Call(req)
 }
 
+// OrderHf returns a single order by order id and symbol
+func (as *ApiService) OrderHf(orderId, symbol string) (*ApiResponse, error) {
+	params := make(map[string]string)
+	params["symbol"] = symbol
+	req := NewRequest(http.MethodGet, "/api/v1/hf/orders/"+orderId, params)
+	return as.Call(req)
+}
+
 // OrderByClient returns a single order by client id.
 func (as *ApiService) OrderByClient(clientOid string) (*ApiResponse, error) {
 	req := NewRequest(http.MethodGet, "/api/v1/order/client-order/"+clientOid, nil)
+	return as.Call(req)
+}
+
+// OrderHfByClient returns a single order by client id.
+func (as *ApiService) OrderHfByClient(clientOid, symbol string) (*ApiResponse, error) {
+	params := make(map[string]string)
+	params["symbol"] = symbol
+	req := NewRequest(http.MethodGet, "/api/v1/order/client-order/"+clientOid, params)
 	return as.Call(req)
 }
 
