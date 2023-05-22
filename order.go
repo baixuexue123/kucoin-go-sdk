@@ -167,9 +167,7 @@ func (as *ApiService) OrdersHfActive(symbol string, pagination *PaginationParam)
 }
 
 // OrdersHfDone returns a list your done hf orders.
-func (as *ApiService) OrdersHfDone(symbol string, pagination *PaginationParam) (*ApiResponse, error) {
-	params := make(map[string]string)
-	params["symbol"] = symbol
+func (as *ApiService) OrdersHfDone(params map[string]string, pagination *PaginationParam) (*ApiResponse, error) {
 	pagination.ReadParam(params)
 	req := NewRequest(http.MethodGet, "/api/v1/hf/orders/done", params)
 	return as.Call(req)
