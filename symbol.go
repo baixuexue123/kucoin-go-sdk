@@ -10,6 +10,7 @@ type SymbolModel struct {
 	Name            string `json:"name"`
 	BaseCurrency    string `json:"baseCurrency"`
 	QuoteCurrency   string `json:"quoteCurrency"`
+	FeeCurrency     string `json:"feeCurrency"`
 	Market          string `json:"market"`
 	BaseMinSize     string `json:"baseMinSize"`
 	QuoteMinSize    string `json:"quoteMinSize"`
@@ -18,10 +19,10 @@ type SymbolModel struct {
 	BaseIncrement   string `json:"baseIncrement"`
 	QuoteIncrement  string `json:"quoteIncrement"`
 	PriceIncrement  string `json:"priceIncrement"`
-	FeeCurrency     string `json:"feeCurrency"`
-	EnableTrading   bool   `json:"enableTrading"`
-	IsMarginEnabled bool   `json:"isMarginEnabled"`
 	PriceLimitRate  string `json:"priceLimitRate"`
+	MinFunds        string `json:"minFunds"`
+	IsMarginEnabled bool   `json:"isMarginEnabled"`
+	EnableTrading   bool   `json:"enableTrading"`
 }
 
 // A SymbolsModel is the set of *SymbolModel.
@@ -33,7 +34,7 @@ func (as *ApiService) Symbols(market string) (*ApiResponse, error) {
 	if market != "" {
 		p["market"] = market
 	}
-	req := NewRequest(http.MethodGet, "/api/v1/symbols", p)
+	req := NewRequest(http.MethodGet, "/api/v2/symbols", p)
 	return as.Call(req)
 }
 
