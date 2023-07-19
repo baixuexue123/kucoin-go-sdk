@@ -10,6 +10,7 @@ type WithdrawalModel struct {
 	Address    string `json:"address"`
 	Memo       string `json:"memo"`
 	Currency   string `json:"currency"`
+	Chain      string `json:"chain"`
 	Amount     string `json:"amount"`
 	Fee        string `json:"fee"`
 	WalletTxId string `json:"walletTxId"`
