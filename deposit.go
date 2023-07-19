@@ -21,6 +21,7 @@ type DepositModel struct {
 	Amount     string `json:"amount"`
 	Fee        string `json:"fee"`
 	Currency   string `json:"currency"`
+	Chain      string `json:"chain"`
 	IsInner    bool   `json:"isInner"`
 	WalletTxId string `json:"walletTxId"`
 	Status     string `json:"status"`
