@@ -188,6 +188,7 @@ type V1OrderModel struct {
 type V1OrdersModel []*V1OrderModel
 
 // V1Orders returns a list of v1 historical orders.
+// Deprecated
 func (as *ApiService) V1Orders(params map[string]string, pagination *PaginationParam) (*ApiResponse, error) {
 	pagination.ReadParam(params)
 	req := NewRequest(http.MethodGet, "/api/v1/hist-orders", params)
