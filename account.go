@@ -247,6 +247,25 @@ func (as *ApiService) InnerTransferV2(clientOid, currency, from, to, amount stri
 	return as.Call(req)
 }
 
+// UniversalTransfer
+// Transfer type：INTERNAL(Transfer within account)、PARENT_TO_SUB(Transfer from master-account to sub-account)，SUB_TO_PARENT(Transfer from sub-account to master-account)
+func (as *ApiService) UniversalTransfer(clientOid, typo, currency, amount, fromUserId, fromAccountType, fromAccountTag, toUserId, toAccountType, toAccountTag string) (*ApiResponse, error) {
+	p := map[string]string{
+		"clientOid":       clientOid,
+		"type":            typo,
+		"currency":        currency,
+		"amount":          amount,
+		"fromUserId":      fromUserId,
+		"fromAccountType": fromAccountType,
+		"fromAccountTag":  fromAccountTag,
+		"toUserId":        toUserId,
+		"toAccountType":   toAccountType,
+		"toAccountTag":    toAccountTag,
+	}
+	req := NewRequest(http.MethodPost, "/api/v3/accounts/universal-transfer", p)
+	return as.Call(req)
+}
+
 // A SubTransferResultModel represents the result of a sub-transfer operation.
 type SubTransferResultModel InnerTransferResultModel
 
