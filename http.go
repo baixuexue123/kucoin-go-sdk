@@ -2,6 +2,7 @@ package kucoin
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"errors"
@@ -55,8 +56,13 @@ func (r *Request) addParams(p interface{}) {
 	if p == nil {
 		return
 	}
+
 	switch r.Method {
 	case http.MethodGet, http.MethodDelete:
+		if v, ok := p.(url.Values); ok {
+			r.Query = v
+			return
+		}
 		for key, value := range p.(map[string]string) {
 			r.Query.Add(key, value)
 		}
@@ -119,7 +125,7 @@ func (r *Request) HttpRequest() (*http.Request, error) {
 
 // Requester contains Request() method, can launch a http request.
 type Requester interface {
-	Request(request *Request, timeout time.Duration) (*Response, error)
+	Request(ctx context.Context, request *Request, timeout time.Duration) (*Response, error)
 }
 
 // A BasicRequester represents a basic implement of Requester by http.Client.
@@ -127,7 +133,7 @@ type BasicRequester struct {
 }
 
 // Request makes a http request.
-func (br *BasicRequester) Request(request *Request, timeout time.Duration) (*Response, error) {
+func (br *BasicRequester) Request(ctx context.Context, request *Request, timeout time.Duration) (*Response, error) {
 	tr := http.DefaultTransport
 	tc := tr.(*http.Transport).TLSClientConfig
 	if tc == nil {
@@ -153,7 +159,7 @@ func (br *BasicRequester) Request(request *Request, timeout time.Duration) (*Res
 		logrus.Debugf("Sent a HTTP request#%d: %s", rid, string(dump))
 	}
 
-	rsp, err := cli.Do(req)
+	rsp, err := cli.Do(req.WithContext(ctx))
 	if err != nil {
 		return nil, err
 	}

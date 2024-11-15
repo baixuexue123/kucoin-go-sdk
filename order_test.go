@@ -1,6 +1,7 @@
 package kucoin
 
 import (
+	"context"
 	"strconv"
 	"testing"
 	"time"
@@ -17,7 +18,7 @@ func TestApiService_CreateOrder(t *testing.T) {
 		Price:     "0.0036",
 		Size:      "1",
 	}
-	rsp, err := s.CreateOrder(p)
+	rsp, err := s.CreateOrder(context.Background(), p)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -48,7 +49,7 @@ func TestApiService_CreateMultiOrder(t *testing.T) {
 		}
 		orders = append(orders, p)
 	}
-	rsp, err := s.CreateMultiOrder("KCS-ETH", orders)
+	rsp, err := s.CreateMultiOrder(context.Background(), "KCS-ETH", orders)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -63,7 +64,7 @@ func TestApiService_CancelOrder(t *testing.T) {
 	t.SkipNow()
 
 	s := NewApiServiceFromEnv()
-	rsp, err := s.CancelOrder("order id")
+	rsp, err := s.CancelOrder(context.Background(), "order id")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -82,7 +83,7 @@ func TestApiService_CancelOrderByClient(t *testing.T) {
 	t.SkipNow()
 
 	s := NewApiServiceFromEnv()
-	rsp, err := s.CancelOrderByClient("client id")
+	rsp, err := s.CancelOrderByClient(context.Background(), "client id")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -103,7 +104,7 @@ func TestApiService_CancelOrders(t *testing.T) {
 	t.SkipNow()
 
 	s := NewApiServiceFromEnv()
-	rsp, err := s.CancelOrders(map[string]string{
+	rsp, err := s.CancelOrders(context.Background(), map[string]string{
 		"symbol":    "ETH-BTC",
 		"tradeType": "TRADE",
 	})
@@ -124,7 +125,7 @@ func TestApiService_CancelOrders(t *testing.T) {
 func TestApiService_Orders(t *testing.T) {
 	s := NewApiServiceFromEnv()
 	p := &PaginationParam{CurrentPage: 1, PageSize: 10}
-	rsp, err := s.Orders(map[string]string{}, p)
+	rsp, err := s.Orders(context.Background(), map[string]string{}, p)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -154,7 +155,7 @@ func TestApiService_V1Orders(t *testing.T) {
 	t.SkipNow()
 	s := NewApiServiceFromEnv()
 	p := &PaginationParam{CurrentPage: 1, PageSize: 10}
-	rsp, err := s.V1Orders(map[string]string{}, p)
+	rsp, err := s.V1Orders(context.Background(), map[string]string{}, p)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -186,7 +187,7 @@ func TestApiService_Order(t *testing.T) {
 	s := NewApiServiceFromEnv()
 
 	p := &PaginationParam{CurrentPage: 1, PageSize: 10}
-	rsp, err := s.Orders(map[string]string{}, p)
+	rsp, err := s.Orders(context.Background(), map[string]string{}, p)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -199,7 +200,7 @@ func TestApiService_Order(t *testing.T) {
 		t.SkipNow()
 	}
 
-	rsp, err = s.Order(os[0].Id)
+	rsp, err = s.Order(context.Background(), os[0].Id)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -225,7 +226,7 @@ func TestApiService_Order(t *testing.T) {
 
 func TestApiService_RecentOrders(t *testing.T) {
 	s := NewApiServiceFromEnv()
-	rsp, err := s.RecentOrders()
+	rsp, err := s.RecentOrders(context.Background())
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -255,7 +256,7 @@ func TestApiService_OrderByClient(t *testing.T) {
 	t.SkipNow()
 
 	s := NewApiServiceFromEnv()
-	rsp, err := s.OrderByClient("client id")
+	rsp, err := s.OrderByClient(context.Background(), "client id")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -290,7 +291,7 @@ func TestApiService_CreatMarginOrder(t *testing.T) {
 		Price:     "1",
 		Size:      "1",
 	}
-	rsp, err := s.CreateMarginOrder(p)
+	rsp, err := s.CreateMarginOrder(context.Background(), p)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -317,7 +318,7 @@ func TestApiService_CreateStopOrder(t *testing.T) {
 		Size:      "1",
 		StopPrice: "10.0",
 	}
-	rsp, err := s.CreateStopOrder(p)
+	rsp, err := s.CreateStopOrder(context.Background(), p)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -335,7 +336,7 @@ func TestApiService_CancelStopOrder(t *testing.T) {
 	t.SkipNow()
 
 	s := NewApiServiceFromEnv()
-	rsp, err := s.CancelStopOrder("xxxxx")
+	rsp, err := s.CancelStopOrder(context.Background(), "xxxxx")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -350,7 +351,7 @@ func TestApiService_CancelStopOrderBy(t *testing.T) {
 	t.SkipNow()
 
 	s := NewApiServiceFromEnv()
-	rsp, err := s.CancelStopOrderBy(map[string]string{"orderId": "xxxx"})
+	rsp, err := s.CancelStopOrderBy(context.Background(), map[string]string{"orderId": "xxxx"})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -363,7 +364,7 @@ func TestApiService_CancelStopOrderBy(t *testing.T) {
 
 func TestApiService_StopOrder(t *testing.T) {
 	s := NewApiServiceFromEnv()
-	rsp, err := s.StopOrder("vs8hoo98rathe2ak003ag5t9")
+	rsp, err := s.StopOrder(context.Background(), "vs8hoo98rathe2ak003ag5t9")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -376,7 +377,7 @@ func TestApiService_StopOrder(t *testing.T) {
 
 func TestApiService_StopOrderByClient(t *testing.T) {
 	s := NewApiServiceFromEnv()
-	rsp, err := s.StopOrderByClient("1112", map[string]string{})
+	rsp, err := s.StopOrderByClient(context.Background(), "1112", map[string]string{})
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -390,13 +391,160 @@ func TestApiService_StopOrderByClient(t *testing.T) {
 
 func TestApiService_CancelStopOrderByClient(t *testing.T) {
 	s := NewApiServiceFromEnv()
-	rsp, err := s.CancelStopOrderByClient("1112", map[string]string{})
+	rsp, err := s.CancelStopOrderByClient(context.Background(), "1112", map[string]string{})
 	if err != nil {
 		t.Fatal(err)
 	}
 	o := &CancelStopOrderByClientModel{}
 	t.Log(ToJsonString(rsp))
 	if err := rsp.ReadData(o); err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ToJsonString(o))
+}
+
+func TestApiService_CreateOcoOrderModel(t *testing.T) {
+
+	s := NewApiServiceFromEnv()
+	p := &CreateOcoOrderModel{
+		Side:       "buy",
+		Symbol:     "BTC-USDT",
+		Price:      "1",
+		Size:       "1",
+		StopPrice:  "100000",
+		LimitPrice: "100002",
+		TradeType:  "TRADE",
+		ClientOid:  IntToString(time.Now().UnixNano()),
+		Remark:     "xx",
+	}
+	rsp, err := s.CreateOcoOrder(context.Background(), p)
+	if err != nil {
+		t.Fatal(err)
+	}
+	o := &CreateOrderResultModel{}
+	if err := rsp.ReadData(o); err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ToJsonString(o))
+	switch {
+	case o.OrderId == "":
+		t.Error("Empty key 'OrderId'")
+	}
+}
+
+func TestApiService_DeleteOcoOrder(t *testing.T) {
+
+	s := NewApiServiceFromEnv()
+	rsp, err := s.DeleteOcoOrder(context.Background(), "65d1c7042e6db70007e639b2")
+	if err != nil {
+		t.Fatal(err)
+	}
+	o := &CancelledOcoOrderResModel{}
+	if err := rsp.ReadData(o); err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ToJsonString(o))
+	switch {
+	case len(o.CancelledOrderIds) == 0:
+		t.Error("Empty key 'cancelledOrderIds'")
+	}
+}
+
+func TestApiService_DeleteOcoOrderClientId(t *testing.T) {
+
+	s := NewApiServiceFromEnv()
+	rsp, err := s.DeleteOcoOrderClientId(context.Background(), "order client id")
+	if err != nil {
+		t.Fatal(err)
+	}
+	o := &CancelledOcoOrderResModel{}
+	if err := rsp.ReadData(o); err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ToJsonString(o))
+	switch {
+	case len(o.CancelledOrderIds) == 0:
+		t.Error("Empty key 'cancelledOrderIds'")
+	}
+}
+
+func TestApiService_DeleteOcoOrders(t *testing.T) {
+
+	s := NewApiServiceFromEnv()
+	rsp, err := s.DeleteOcoOrders(context.Background(), "BTC-USDT", "")
+	if err != nil {
+		t.Fatal(err)
+	}
+	o := &CancelledOcoOrderResModel{}
+	if err := rsp.ReadData(o); err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ToJsonString(o))
+	switch {
+	case len(o.CancelledOrderIds) == 0:
+		t.Error("Empty key 'cancelledOrderIds'")
+	}
+}
+
+func TestApiService_OcoOrderDetail(t *testing.T) {
+
+	s := NewApiServiceFromEnv()
+	rsp, err := s.OcoOrderDetail(context.Background(), "65d1c7042e6db70007e639b2")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	o := &OrderDetailModel{}
+	if err := rsp.ReadData(&o); err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ToJsonString(o))
+}
+
+func TestApiService_OcoOrder(t *testing.T) {
+
+	s := NewApiServiceFromEnv()
+	rsp, err := s.OcoOrder(context.Background(), "65d1c7042e6db70007e639b2")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	o := &OcoOrderResModel{}
+	if err := rsp.ReadData(&o); err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ToJsonString(o))
+}
+
+func TestApiService_OcoClientOrder(t *testing.T) {
+
+	s := NewApiServiceFromEnv()
+	rsp, err := s.OcoClientOrder(context.Background(), "1708246787246002000")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	o := &OcoOrderResModel{}
+	if err := rsp.ReadData(&o); err != nil {
+		t.Fatal(err)
+	}
+	t.Log(ToJsonString(o))
+}
+
+func TestApiService_OcoOrders(t *testing.T) {
+
+	s := NewApiServiceFromEnv()
+	p2 := &PaginationParam{CurrentPage: 1, PageSize: 10}
+	p1 := map[string]string{
+		"symbol": "BTC-USDT",
+	}
+	rsp, err := s.OcoOrders(context.Background(), p1, p2)
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	o := &OcoOrdersModel{}
+	if _, err := rsp.ReadPaginationData(&o); err != nil {
 		t.Fatal(err)
 	}
 	t.Log(ToJsonString(o))
